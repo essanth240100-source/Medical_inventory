@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Feedback Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .rating-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .rating-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .stars {
+            display: inline-flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+            transform: scale(1.1);
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-md"></i> Patient Feedback</h1>
+            <p>Help us improve our services</p>
+        </div>
+
+        <div class="form-container">
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> Thank you for your feedback!
+            </div>
+
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="patientName">Patient Name</label>
+                    <input type="text" id="patientName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="patientEmail">Email</label>
+                    <input type="email" id="patientEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="visitDate">Visit Date</label>
+                    <input type="date" id="visitDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <select id="department" required>
+                        <option value="">Select Department</option>
+                        <option value="General Medicine">General Medicine</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Emergency">Emergency</option>
+                    </select>
+                </div>
+
+                <div class="rating-container">
+                    <label class="rating-label">Overall Experience</label>
+                    <div class="stars" id="overallRating">
+                        <i class="fas fa-star star" data-rating="1"></i>
+                        <i class="fas fa-star star" data-rating="2"></i>
+                        <i class="fas fa-star star" data-rating="3"></i>
+                        <i class="fas fa-star star" data-rating="4"></i>
+                        <i class="fas fa-star star" data-rating="5"></i>
+                    </div>
+                    <div class="rating-text" id="overallText">Click to rate</div>
+                </div>
+
+                <div class="rating-container">
+                    <label class="rating-label">Staff Behavior</label>
+                    <div class="stars" id="staffRating">
+                        <i class="fas fa-star star" data-rating="1"></i>
+                        <i class="fas fa-star star" data-rating="2"></i>
+                        <i class="fas fa-star star" data-rating="3"></i>
+                        <i class="fas fa-star star" data-rating="4"></i>
+                        <i class="fas fa-star star" data-rating="5"></i>
+                    </div>
+                    <div class="rating-text" id="staffText">Click to rate</div>
+                </div>
+
+                <div class="rating-container">
+                    <label class="rating-label">Cleanliness</label>
+                    <div class="stars" id="cleanlinessRating">
+                        <i class="fas fa-star star" data-rating="1"></i>
+                        <i class="fas fa-star star" data-rating="2"></i>
+                        <i class="fas fa-star star" data-rating="3"></i>
+                        <i class="fas fa-star star" data-rating="4"></i>
+                        <i class="fas fa-star star" data-rating="5"></i>
+                    </div>
+                    <div class="rating-text" id="cleanlinessText">Click to rate</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments">Additional Comments</label>
+                    <textarea id="comments" rows="4" placeholder="Please share your experience..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let ratings = {
+            overall: 0,
+            staff: 0,
+            cleanliness: 0
+        };
+
+        const ratingTexts = {
+            1: 'Poor',
+            2: 'Fair', 
+            3: 'Good',
+            4: 'Very Good',
+            5: 'Excellent'
+        };
+
+        // Initialize rating functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            setupRatingStars('overallRating', 'overallText', 'overall');
+            setupRatingStars('staffRating', 'staffText', 'staff');
+            setupRatingStars('cleanlinessRating', 'cleanlinessText', 'cleanliness');
+            
+            document.getElementById('feedbackForm').addEventListener('submit', handleSubmit);
+        });
+
+        function setupRatingStars(containerId, textId, ratingKey) {
+            const container = document.getElementById(containerId);
+            const textElement = document.getElementById(textId);
+            const stars = container.querySelectorAll('.star');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.dataset.rating);
+                    ratings[ratingKey] = rating;
+                    updateStars(stars, rating);
+                    textElement.textContent = ratingTexts[rating];
+                });
+
+                star.addEventListener('mouseover', function() {
+                    const rating = parseInt(this.dataset.rating);
+                    updateStars(stars, rating);
+                });
+            });
+
+            container.addEventListener('mouseleave', function() {
+                updateStars(stars, ratings[ratingKey]);
+                textElement.textContent = ratings[ratingKey] ? ratingTexts[ratings[ratingKey]] : 'Click to rate';
+            });
+        }
+
+        function updateStars(stars, rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            if (ratings.overall === 0 || ratings.staff === 0 || ratings.cleanliness === 0) {
+                alert('Please provide ratings for all categories.');
+                return;
+            }
+
+            const formData = {
+                name: document.getElementById('patientName').value,
+                email: document.getElementById('patientEmail').value,
+                visitDate: document.getElementById('visitDate').value,
+                department: document.getElementById('department').value,
+                ratings: ratings,
+                comments: document.getElementById('comments').value,
+                submittedAt: new Date().toISOString()
+            };
+
+            console.log('Feedback submitted:', formData);
+            
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('feedbackForm').reset();
+            ratings = { overall: 0, staff: 0, cleanliness: 0 };
+            
+            // Reset all stars
+            document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+            document.querySelectorAll('.rating-text').forEach(text => text.textContent = 'Click to rate');
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
